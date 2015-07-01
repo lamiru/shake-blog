@@ -1,4 +1,14 @@
 Hello, Django!
-<br />
-<br />
+<hr/>
+
+<table>
+    {% for post in post_list %}
+    <tr>
+        <td>{{ post.title }}</td>
+        <td>{{ post.updated_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr/>
 <a href="{% url "blog:post_new" %}">New Post</a>
