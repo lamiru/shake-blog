@@ -4,7 +4,11 @@ Hello, Django!
 <table>
     {% for post in post_list %}
     <tr>
-        <td>{{ post.title }}</td>
+        <td>
+            <a href="{% url "blog:post_edit" post.id %}">
+                {{ post.title }}
+            </a>
+        </td>
         <td>{{ post.updated_at }}</td>
     </tr>
     {% endfor %}

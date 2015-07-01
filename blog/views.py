@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from blog.forms import PostForm
 from blog.models import Post
 
@@ -18,6 +18,21 @@ def new(request):
             return redirect('blog:index')
     else:
         form = PostForm()
+    return render(request, 'blog/form.html', {
+        'form': form,
+    })
+
+
+def edit(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:index')
+    else:
+        form = PostForm(instance=post)
     return render(request, 'blog/form.html', {
         'form': form,
     })
