@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from blog.forms import PostForm
 
 
 def index(request):
@@ -7,5 +8,13 @@ def index(request):
 
 
 def new(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:index')
+    else:
+        form = PostForm()
     return render(request, 'blog/form.html', {
-        })
+        'form': form,
+    })
