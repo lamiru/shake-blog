@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Shake Blog</title>
+<link rel="stylesheet" href="{% static "bootstrap-3.3.4-dist/css/bootstrap.min.css" %}" />
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Shake Blog</h1>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+<script src="{% static "jquery-2.1.3.min.js" %}"></script>
+<script src="{% static "bootstrap-3.3.4-dist/js/bootstrap.min.js" %}"></script>
+
+</body>
+</html>

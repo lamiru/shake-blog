@@ -1,7 +1,7 @@
-Hello, Django!
-<hr/>
+{% extends "layout.html" %}
 
-<table>
+{% block content %}
+<table class="table table-hover table-bordered">
     {% for post in post_list %}
     <tr>
         <td>
@@ -15,4 +15,5 @@ Hello, Django!
 </table>
 
 <hr/>
-<a href="{% url "blog:post_new" %}">New Post</a>
+<a href="{% url "blog:post_new" %}" class="btn btn-default">New Post</a>
+{% endblock %}
