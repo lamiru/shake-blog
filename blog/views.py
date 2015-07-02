@@ -43,3 +43,13 @@ def detail(request, id):
     return render(request, 'blog/post_detail.html', {
         'post': post,
     })
+
+
+def delete(request, id):
+    post = get_object_or_404(Post, id=id)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('blog:index')
+    return render(request, 'blog/post_delete_confirm.html', {
+        'post': post,
+    })

@@ -14,6 +14,7 @@
     </div>
 
     <a href="{% url "blog:post_edit" post.id %}" class="btn btn-info">Edit</a>
+    <a href="{% url "blog:post_delete" post.id %}" class="btn btn-danger">Delete</a>
     <a href="{% url "blog:index" %}" class="btn btn-default">List</a>
 
 {% endblock %}
