@@ -17,5 +17,23 @@
             Updated at : {{ post.updated_at }}
         </div>
     </div>
-    <a href="{% url "blog:comment_new" post.id %}" class="btn btn-primary">New Comment</a>
+    <p>
+        <a href="{% url "blog:comment_new" post.id %}" class="btn btn-primary btn-block">New Comment</a>
+    </p>
+    <div class="panel panel-default">
+        <div class="panel-heading">Comments</div>
+        <div class="panel-body">
+            <table class="table table-hover">
+            {% for comment in post.comment_set.all %}
+            <tr>
+                <td>
+                    {{ comment.message }}
+                    at {{ comment.updated_at }}
+                </td>
+            </tr>
+            {% empty %}
+            {% endfor %}
+            </table>
+        </div>
+    </div>
 {% endblock %}
