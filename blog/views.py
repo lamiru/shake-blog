@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from blog.forms import PostForm, CommentForm
-from blog.models import Post
+from blog.models import Post, Comment
 
 
 def index(request):
@@ -66,6 +66,20 @@ def comment_new(request, id):
             return redirect('blog:post_detail', id)
     else:
         form = CommentForm()
+    return render(request, 'blog/form.html', {
+        'form': form,
+    })
+
+
+def comment_edit(request, id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:post_detail', id)
+    else:
+        form = CommentForm(instance=comment)
     return render(request, 'blog/form.html', {
         'form': form,
     })
