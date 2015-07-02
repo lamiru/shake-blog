@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from blog.forms import PostForm
+from blog.forms import PostForm, CommentForm
 from blog.models import Post
 
 
@@ -52,4 +52,17 @@ def delete(request, id):
         return redirect('blog:index')
     return render(request, 'blog/post_delete_confirm.html', {
         'post': post,
+    })
+
+
+def comment_new(request, id):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:post_detail', id)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/form.html', {
+        'form': form,
     })
