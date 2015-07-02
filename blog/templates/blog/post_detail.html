@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{ post.title }}
+        </div>
+        <div class="panel-body">
+            {{ post.content }}
+        </div>
+        <div class="panel-footer">
+            Updated at : {{ post.updated_at }}
+        </div>
+    </div>
+
+    <a href="{% url "blog:post_edit" post.id %}" class="btn btn-info">Edit</a>
+    <a href="{% url "blog:index" %}" class="btn btn-default">List</a>
+
+{% endblock %}
