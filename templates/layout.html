@@ -12,11 +12,6 @@
         <div class="row">
             <div class="col-sm-12">
                 <h1>Shake Blog</h1>
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-                {% endfor %}
                 {% block content %}
                 {% endblock %}
             </div>
@@ -25,6 +20,19 @@
 
 <script src="{% static "jquery-2.1.3.min.js" %}"></script>
 <script src="{% static "bootstrap-3.3.4-dist/js/bootstrap.min.js" %}"></script>
+<script src="{% static "jquery.toaster.js" %}"></script>
+
+{% if messages %}
+<script>
+{% for message in messages %}
+    $.toaster({
+        priority: '{{ message.tags }}',
+        title: '{{ message.tags }}',
+        message: '{{ message }}'
+    });
+{% endfor %}
+</script>
+{% endif %}
 
 </body>
 </html>
