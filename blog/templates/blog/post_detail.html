@@ -1,5 +1,35 @@
 {% extends "layout.html" %}
 
+{% block extra_script %}
+<script>
+    $(function() {
+        $(".comment-delete-confirm").click(function() {
+            var url = $(this).attr("href");
+            var target = $(this).parent().parent();
+
+            if ( confirm("Are you sure to delete the comment?") ) {
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                }).done(function() {
+                    target.remove();
+                    $.toaster({
+                        priority: 'danger',
+                        message: 'Deleted a comment.'
+                    });
+
+                }).fail(function() {
+                    $.toaster({
+                        priority: 'danger',
+                        message: 'Failed'
+                    });
+                });
+            }
+            return false;
+        });
+    });
+</script>
+{% endblock %}
 {% block content %}
     <p class="text-right">
         <a href="{% url "blog:post_edit" post.id %}" class="btn btn-info">Edit</a>
@@ -29,7 +59,7 @@
                 <td>
                     <a href="{% url "blog:comment_edit" post.id comment.id %}">{{ comment.message }}</a>
                     <span>at {{ comment.updated_at }}</span>
-                    <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger">Delete</a>
+                    <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger comment-delete-confirm">Delete</a>
                 </td>
             </tr>
             {% empty %}
