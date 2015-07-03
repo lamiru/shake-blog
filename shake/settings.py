@@ -105,3 +105,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+from django.contrib.messages import constants
+MESSAGE_TAGS = {
+    constants.ERROR: 'danger',
+}
