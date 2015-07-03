@@ -29,6 +29,7 @@
                 <td>
                     <a href="{% url "blog:comment_edit" post.id comment.id %}">{{ comment.message }}</a>
                     <span>at {{ comment.updated_at }}</span>
+                    <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger">Delete</a>
                 </td>
             </tr>
             {% empty %}
