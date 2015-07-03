@@ -12,6 +12,11 @@
         <div class="row">
             <div class="col-sm-12">
                 <h1>Shake Blog</h1>
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
                 {% block content %}
                 {% endblock %}
             </div>

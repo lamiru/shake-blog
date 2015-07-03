@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from blog.forms import PostForm, CommentForm
 from blog.models import Post, Comment
+from django.contrib import messages
 
 
 def index(request):
@@ -15,6 +16,7 @@ def new(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save()
+            messages.info(request, 'Added a new post.')
             return redirect('blog:post_detail', post.id)
     else:
         form = PostForm()
@@ -30,6 +32,7 @@ def edit(request, id):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
+            messages.info(request, 'Edited a post.')
             return redirect('blog:post_detail', post.id)
     else:
         form = PostForm(instance=post)
@@ -49,6 +52,7 @@ def delete(request, id):
     post = get_object_or_404(Post, id=id)
     if request.method == 'POST':
         post.delete()
+        messages.error(request, 'Deleted a post.')
         return redirect('blog:index')
     return render(request, 'blog/post_delete_confirm.html', {
         'post': post,
@@ -63,6 +67,7 @@ def comment_new(request, id):
             comment = form.save(commit=False)
             comment.post = post
             comment.save()
+            messages.info(request, 'Added a new comment.')
             return redirect('blog:post_detail', id)
     else:
         form = CommentForm()
@@ -77,6 +82,7 @@ def comment_edit(request, id, comment_id):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
+            messages.info(request, 'Edited a comment.')
             return redirect('blog:post_detail', id)
     else:
         form = CommentForm(instance=comment)
@@ -89,6 +95,7 @@ def comment_delete(request, id, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.method == 'POST':
         comment.delete()
+        messages.error(request, 'Deleted a comment.')
         return redirect('blog:post_detail', id)
     return render(request, 'blog/comment_delete_confirm.html', {
     })
