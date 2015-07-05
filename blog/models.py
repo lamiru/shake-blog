@@ -16,3 +16,11 @@ class Comment(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'message': self.message,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+        }
