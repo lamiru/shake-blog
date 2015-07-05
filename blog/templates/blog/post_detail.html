@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load bootstrap3 %}
 
 {% block extra_script %}
 <script>
@@ -17,7 +18,6 @@
                         priority: 'danger',
                         message: 'Deleted a comment.'
                     });
-
                 }).fail(function() {
                     $.toaster({
                         priority: 'danger',
@@ -47,18 +47,23 @@
             Updated at : {{ post.updated_at }}
         </div>
     </div>
-    <p>
-        <a href="{% url "blog:comment_new" post.id %}" class="btn btn-primary btn-block">New Comment</a>
-    </p>
     <div class="panel panel-default">
         <div class="panel-heading">Comments</div>
         <div class="panel-body">
+            <form id="comment_form" action="{% url 'blog:comment_new' post.id %}" method="post">
+                {% csrf_token %}
+                {% bootstrap_form comment_form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary btn-block">Post</button>
+                {% endbuttons %}
+            </form>
             <table class="table table-hover">
             {% for comment in post.comment_set.all %}
             <tr>
                 <td>
-                    <a href="{% url "blog:comment_edit" post.id comment.id %}">{{ comment.message }}</a>
-                    <span>at {{ comment.updated_at }}</span>
+                    <div>{{ comment.message|linebreaks }}</div>
+                    <span>{{ comment.updated_at }}</span>
+                    <a href="{% url "blog:comment_edit" post.id comment.id %}">Edit</a>
                     <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger comment-delete-confirm">Delete</a>
                 </td>
             </tr>

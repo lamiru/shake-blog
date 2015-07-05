@@ -43,8 +43,10 @@ def edit(request, id):
 
 def detail(request, id):
     post = get_object_or_404(Post, id=id)
+    comment_form = CommentForm()
     return render(request, 'blog/post_detail.html', {
         'post': post,
+        'comment_form': comment_form,
     })
 
 
@@ -69,8 +71,6 @@ def comment_new(request, id):
             comment.save()
             messages.info(request, 'Added a new comment.')
             return redirect('blog:post_detail', id)
-    else:
-        form = CommentForm()
     return render(request, 'blog/form.html', {
         'form': form,
     })
