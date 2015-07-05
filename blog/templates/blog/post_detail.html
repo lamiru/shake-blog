@@ -4,6 +4,14 @@
 {% block extra_script %}
 <script>
     $(function() {
+        $("#comment_form").ajaxForm(function(comment) {
+            $("#comment_form")[0].reset();
+            $("#comment_list tbody").prepend($('<tr><td>' + comment.message + ' at ' + comment.updated_at + '</td></tr>'));
+            $.toaster({
+                priority: 'info',
+                message: 'Added a new comment.'
+            });
+        })
         $(".comment-delete-confirm").click(function() {
             var url = $(this).attr("href");
             var target = $(this).parent().parent();
@@ -57,7 +65,8 @@
                     <button type="submit" class="btn btn-primary btn-block">Post</button>
                 {% endbuttons %}
             </form>
-            <table class="table table-hover">
+            <table id="comment_list" class="table table-hover">
+            <tbody>
             {% for comment in post.comment_set.all %}
             <tr>
                 <td>
@@ -67,8 +76,8 @@
                     <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger comment-delete-confirm">Delete</a>
                 </td>
             </tr>
-            {% empty %}
             {% endfor %}
+            </tbody>
             </table>
         </div>
     </div>
