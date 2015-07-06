@@ -112,3 +112,20 @@ from django.contrib.messages import constants
 MESSAGE_TAGS = {
     constants.ERROR: 'danger',
 }
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'DEBUG',
+        }
+    },
+}
