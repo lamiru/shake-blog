@@ -129,3 +129,7 @@ LOGGING = {
         }
     },
 }
+
+from django.core.urlresolvers import reverse_lazy
+LOGIN_URL = reverse_lazy('login')  # default: /acconts/login/
+LOGIN_REDIRECT_URL = reverse_lazy('blog:index')  # default: /accounts/profile/
