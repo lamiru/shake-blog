@@ -4,9 +4,12 @@
 {% block extra_script %}
 <script>
     $(function() {
+        var datetime_format = django.get_format('DATETIME_FORMAT');
+
         $("#comment_form").ajaxForm(function(comment) {
+            var updated_at = new Date(comment.updated_at).format(datetime_format);
             $("#comment_form")[0].reset();
-            $("#comment_list tbody").prepend($('<tr><td>' + comment.message + ' at ' + comment.updated_at + '</td></tr>'));
+            $("#comment_list tbody").prepend($('<tr><td><pre>' + comment.message + '</pre><span>' + updated_at + '</span></td></tr>'));
             $.toaster({
                 priority: 'info',
                 message: 'Added a new comment.'
@@ -70,7 +73,7 @@
             {% for comment in post.comment_set.all %}
             <tr>
                 <td>
-                    <div>{{ comment.message|linebreaks }}</div>
+                    <pre>{{ comment.message }}</pre>
                     <span>{{ comment.updated_at }}</span>
                     <a href="{% url "blog:comment_edit" post.id comment.id %}">Edit</a>
                     <a href="{% url "blog:comment_delete" post.id comment.id %}" class="text-danger comment-delete-confirm">Delete</a>
