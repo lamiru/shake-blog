@@ -2,8 +2,12 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns(
-    'blog.views',
+    'blog.views_cbv',
     url(r'^$', 'index', name='index'),
+)
+
+urlpatterns += patterns(
+    'blog.views',
     url(r'^new/$', 'new', name='post_new'),
     url(r'^(?P<id>\d+)/edit/$', 'edit', name='post_edit'),
     url(r'^(?P<id>\d+)/$', 'detail', name='post_detail'),
