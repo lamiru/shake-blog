@@ -1,6 +1,8 @@
-from django.views.generic import ListView, DetailView
+from django.contrib import messages
+from django.core.urlresolvers import reverse
+from django.views.generic import ListView, DetailView, CreateView
 from blog.models import Post
-from blog.forms import CommentForm
+from blog.forms import PostForm, CommentForm
 
 
 index = ListView.as_view(model=Post, template_name='blog/index.html')
@@ -17,3 +19,19 @@ class PostDetailView(DetailView):
         return context
 
 detail = PostDetailView.as_view()
+
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/form.html'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.id])
+
+    def form_valid(self, form):
+        response = super(PostCreateView, self).form_valid(form)
+        messages.info(self.request, 'Added a new post.')
+        return response
+
+new = PostCreateView.as_view()
