@@ -11,7 +11,6 @@ index = ListView.as_view(model=Post, template_name='blog/index.html')
 
 class PostDetailView(DetailView):
     model = Post
-    pk_url_kwarg = 'id'
     template_name = 'blog/post_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -41,7 +40,6 @@ new = PostCreateView.as_view()
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
-    pk_url_kwarg = 'id'
     template_name = 'blog/form.html'
 
     def get_success_url(self):
@@ -57,7 +55,6 @@ edit = PostUpdateView.as_view()
 
 class PostDeleteView(DeleteView):
     model = Post
-    pk_url_kwarg = 'id'
     template_name = 'blog/post_delete_confirm.html'
     success_url = reverse_lazy('blog:index')
 
@@ -94,7 +91,6 @@ comment_new = CommentCreateView.as_view()
 class CommentUpdateView(UpdateView):
     model = Comment
     form_class = CommentForm
-    pk_url_kwarg = 'comment_id'
     template_name = 'blog/form.html'
 
     def get_success_url(self):
@@ -110,7 +106,6 @@ comment_edit = CommentUpdateView.as_view()
 
 class CommentDeleteView(DeleteView):
     model = Comment
-    pk_url_kwarg = 'comment_id'
 
     def get_success_url(self):
         return reverse('blog:post_detail', args=[self.object.post.id])
