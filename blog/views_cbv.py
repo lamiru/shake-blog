@@ -106,3 +106,21 @@ class CommentUpdateView(UpdateView):
         return response
 
 comment_edit = CommentUpdateView.as_view()
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    pk_url_kwarg = 'comment_id'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
+    def delete(self, request, *args, **kwargs):
+        response = super(CommentDeleteView, self).delete(
+            request, *args,
+            **kwargs
+        )
+        messages.error(self.request, 'Deleted a comment.')
+        return response
+
+comment_delete = CommentDeleteView.as_view()
