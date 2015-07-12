@@ -24,9 +24,6 @@ class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
 
-    def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.id])
-
     def form_valid(self, form):
         response = super(PostCreateView, self).form_valid(form)
         messages.info(self.request, 'Added a new post.')
@@ -38,9 +35,6 @@ new = PostCreateView.as_view()
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
-
-    def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.id])
 
     def form_valid(self, form):
         response = super(PostUpdateView, self).form_valid(form)
@@ -65,6 +59,9 @@ delete = PostDeleteView.as_view()
 class CommentCreateView(CreateView):
     form_class = CommentForm
 
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
     def form_valid(self, form):
         post = get_object_or_404(Post, id=self.kwargs['id'])
         self.object = form.save(commit=False)
@@ -77,9 +74,6 @@ class CommentCreateView(CreateView):
         messages.info(self.request, 'Added a new comment.')
 
         return super(CommentCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.post.id])
 
 comment_new = CommentCreateView.as_view()
 
