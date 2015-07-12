@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from blog.models import Post
 from blog.forms import PostForm, CommentForm
 
@@ -52,3 +52,17 @@ class PostUpdateView(UpdateView):
         return response
 
 edit = PostUpdateView.as_view()
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+    pk_url_kwarg = 'id'
+    template_name = 'blog/post_delete_confirm.html'
+    success_url = reverse_lazy('blog:index')
+
+    def delete(self, request, *args, **kwargs):
+        response = super(PostDeleteView, self).delete(request, *args, **kwargs)
+        messages.error(self.request, 'Delete a post.')
+        return response
+
+delete = PostDeleteView.as_view()
