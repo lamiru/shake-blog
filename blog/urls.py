@@ -9,12 +9,12 @@ urlpatterns = patterns(
     url(r'^(?P<id>\d+)/edit/$', 'edit', name='post_edit'),
     url(r'^(?P<id>\d+)/delete/$', 'delete', name='post_delete'),
     url(r'^(?P<id>\d+)/comments/new/$', 'comment_new', name='comment_new'),
+    url(r'^(?P<id>\d+)/comments/(?P<comment_id>\d+)/edit/$', 'comment_edit',
+        name='comment_edit'),
 )
 
 urlpatterns += patterns(
     'blog.views',
-    url(r'^(?P<id>\d+)/comments/(?P<comment_id>\d+)/edit/$', 'comment_edit',
-        name='comment_edit'),
     url(r'^(?P<id>\d+)/comments/(?P<comment_id>\d+)/delete/$',
         'comment_delete', name='comment_delete'),
 )
