@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from blog.models import Post
 from blog.forms import PostForm, CommentForm
@@ -66,3 +67,25 @@ class PostDeleteView(DeleteView):
         return response
 
 delete = PostDeleteView.as_view()
+
+
+class CommentCreateView(CreateView):
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, id=self.kwargs['id'])
+        self.object = form.save(commit=False)
+        self.object.post = post
+        self.object.save()
+
+        if self.request.is_ajax():
+            return self.object
+
+        messages.info(self.request, 'Added a new comment.')
+
+        return super(CommentCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
+comment_new = CommentCreateView.as_view()
