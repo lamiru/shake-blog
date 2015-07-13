@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
@@ -25,7 +26,12 @@ class PostCreateView(FormValidMessageMixin, CreateView):
     form_class = PostForm
     form_valid_message = 'Added a new post.'
 
-new = PostCreateView.as_view()
+    def get_form_kwargs(self):
+        kwargs = super(PostCreateView, self).get_form_kwargs()
+        kwargs['author'] = self.request.user
+        return kwargs
+
+new = login_required(PostCreateView.as_view())
 
 
 class PostUpdateView(FormValidMessageMixin, UpdateView):
@@ -33,7 +39,7 @@ class PostUpdateView(FormValidMessageMixin, UpdateView):
     form_class = PostForm
     form_valid_message = 'Edited a post.'
 
-edit = PostUpdateView.as_view()
+edit = login_required(PostUpdateView.as_view())
 
 
 class PostDeleteView(FormValidMessageMixin, DeleteView):
