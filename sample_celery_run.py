@@ -6,7 +6,7 @@
 '''
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shake.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shake.settings.dev")
 import django
 django.setup()
 
