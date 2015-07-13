@@ -2,6 +2,13 @@
 {% load bootstrap3 %}
 
 {% block extra_script %}
+<style>
+    .post_thumbnail_map {
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+</style>
 <script>
     $(function() {
         var datetime_format = django.get_format('DATETIME_FORMAT');
@@ -52,7 +59,10 @@
             {{ post.title }}
         </div>
         <div class="panel-body">
-            {{ post.content }}
+            {% if post.lnglat %}
+                <img class="post_thumbnail_map" src="http://maps.googleapis.com/maps/api/staticmap?center={{ post.lat }},{{ post.lng }}&zoom=11&size=150x150&markers=color:red%7Clabel:A%7C{{ post.lat }},{{ post.lng }}" />
+            {% endif %}
+            {{ post.content|linebreaks }}
         </div>
         <div class="panel-footer">
             Updated at : {{ post.updated_at }}

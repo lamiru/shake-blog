@@ -5,6 +5,7 @@ from django.db import models
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
+    lnglat = models.CharField(max_length=50, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -16,6 +17,16 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', args=[self.id])
+
+    @property
+    def lng(self):
+        if self.lnglat:
+            return self.lnglat.split(',')[0]
+
+    @property
+    def lat(self):
+        if self.lnglat:
+            return self.lnglat.split(',')[1]
 
 
 class Comment(models.Model):

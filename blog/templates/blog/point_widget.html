@@ -1,0 +1,40 @@
+<style>
+    {# /* Google Map default style */ #}
+    #map_canvas_{{ id }} img {
+        max-width: none;
+    }
+    #map_canvas_{{ id }} label {
+        width: auto;
+        display: inline;
+    }
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?v={{ google_map_version }}&sensor=false"></script>
+
+<script>
+(function($) {
+    $(document).ready(function() {
+        var map_dom_element = $("#map_canvas_{{ id }}")[0];
+        var center = new google.maps.LatLng({{ base_lat }}, {{ base_lng }});
+        var base_lnglat = {{ base_lng }} + "," + {{ base_lat }};
+        console.log(base_lnglat);
+        $("#{{ id }}").val(base_lnglat);
+        var options = {
+            zoom: 15,
+            center: center
+        };
+        var map = new google.maps.Map(map_dom_element, options);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: center
+        });
+        google.maps.event.addListener(map, "click", function(e) {
+            marker.setPosition(e.latLng);
+            var lnglat = e.latLng.lng() + "," + e.latLng.lat();
+            console.log(lnglat);
+            $("#{{ id }}").val(lnglat);
+        });
+    });
+})(jQuery);
+</script>
+
+<div id="map_canvas_{{ id }}" style="width: {{ width }}; height: {{ height }};">map loading ...</div>
