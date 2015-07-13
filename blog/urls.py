@@ -13,4 +13,5 @@ urlpatterns = patterns(
         name='comment_edit'),
     url(r'^(?P<post_id>\d+)/comments/(?P<pk>\d+)/delete/$',
         'comment_delete', name='comment_delete'),
+    url(r'^(?P<username>[a-zA-Z0-9_]+)/$', 'author_home', name='author_home'),
 )

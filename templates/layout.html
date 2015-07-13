@@ -35,7 +35,9 @@ body {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Shake Blog</a>
+                {% block navbar_brand %}
+                    <a class="navbar-brand" href="/">Shake Blog</a>
+                {% endblock %}
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">

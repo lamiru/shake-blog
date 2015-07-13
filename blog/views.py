@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
@@ -7,7 +8,11 @@ from blog.forms import PostForm, CommentForm
 from blog.mixins import FormValidMessageMixin
 
 
-index = ListView.as_view(model=Post)
+index = ListView.as_view(
+    model=get_user_model(),
+    context_object_name='author_list',
+    template_name='blog/author_list.html'
+)
 
 
 class PostDetailView(DetailView):
@@ -16,6 +21,7 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
+        context['author'] = self.object.author
         return context
 
 detail = PostDetailView.as_view()
@@ -90,3 +96,19 @@ class CommentDeleteView(FormValidMessageMixin, DeleteView):
         return reverse('blog:post_detail', args=[self.object.post.id])
 
 comment_delete = CommentDeleteView.as_view()
+
+
+class AuthorHomeView(ListView):
+    model = Post
+
+    def get_queryset(self):
+        self.author = get_object_or_404(get_user_model(), username=self.kwargs['username'])  # noqa
+        qs = super(AuthorHomeView, self).get_queryset()
+        return qs.filter(author=self.author)
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorHomeView, self).get_context_data(**kwargs)
+        context['author'] = self.author
+        return context
+
+author_home = AuthorHomeView.as_view()

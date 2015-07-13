@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Blogger</th>
+            <th>Registered</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in author_list %}
+        <tr>
+            <td>
+                <a href="{% url "blog:author_home" user.username %}">
+                    {{ user }}
+                </a>
+            </td>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

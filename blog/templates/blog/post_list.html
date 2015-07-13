@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
-
+{% block navbar_brand %}
+    <a class="navbar-brand" href="{% url "blog:author_home" author.username %}">{{ author }}'s blog</a>
+{% endblock %}
 {% block content %}
 <table class="table table-hover table-bordered">
     {% for post in post_list %}

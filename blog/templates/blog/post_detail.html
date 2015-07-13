@@ -48,6 +48,11 @@
     });
 </script>
 {% endblock %}
+
+{% block navbar_brand %}
+    <a class="navbar-brand" href="{% url "blog:author_home" author.username %}">{{ author }}'s blog</a>
+{% endblock %}
+
 {% block content %}
     <p class="text-right">
         <a href="{% url "blog:post_edit" post.id %}" class="btn btn-info">Edit</a>
