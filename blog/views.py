@@ -61,7 +61,7 @@ class CommentCreateView(FormValidMessageMixin, CreateView):
     form_valid_message = 'Added a new comment.'
 
     def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.post.id])
+        return reverse(self.object.post.get_absolute_url())
 
     def form_valid(self, form):
         post = get_object_or_404(Post, id=self.kwargs['post_id'])
@@ -83,7 +83,7 @@ class CommentUpdateView(FormValidMessageMixin, UpdateView):
     form_valid_message = 'Edited a new comment.'
 
     def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.post.id])
+        return reverse(self.object.post.get_absolute_url())
 
 comment_edit = CommentUpdateView.as_view()
 
@@ -93,7 +93,7 @@ class CommentDeleteView(FormValidMessageMixin, DeleteView):
     form_valid_message = 'Deleted a comment.'
 
     def get_success_url(self):
-        return reverse('blog:post_detail', args=[self.object.post.id])
+        return reverse(self.object.post.get_absolute_url())
 
 comment_delete = CommentDeleteView.as_view()
 
