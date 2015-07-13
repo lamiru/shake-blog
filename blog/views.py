@@ -1,100 +1,92 @@
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect, render
-from blog.forms import PostForm, CommentForm
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
 from blog.models import Post, Comment
+from blog.forms import PostForm, CommentForm
+from blog.mixins import FormValidMessageMixin
 
 
-def index(request):
-    post_list = Post.objects.all()
-    return render(request, 'blog/index.html', {
-        'post_list': post_list,
-    })
+index = ListView.as_view(model=Post)
 
 
-def new(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save()
-            messages.info(request, 'Added a new post.')
-            return redirect('blog:post_detail', post.id)
-    else:
-        form = PostForm()
-    return render(request, 'blog/form.html', {
-        'form': form,
-    })
+class PostDetailView(DetailView):
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
+
+detail = PostDetailView.as_view()
 
 
-def edit(request, id):
-    post = get_object_or_404(Post, id=id)
+class PostCreateView(FormValidMessageMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    form_valid_message = 'Added a new post.'
 
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            messages.info(request, 'Edited a post.')
-            return redirect('blog:post_detail', post.id)
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/form.html', {
-        'form': form,
-    })
+    def get_form_kwargs(self):
+        kwargs = super(PostCreateView, self).get_form_kwargs()
+        kwargs['author'] = self.request.user
+        return kwargs
+
+new = login_required(PostCreateView.as_view())
 
 
-def detail(request, id):
-    post = get_object_or_404(Post, id=id)
-    comment_form = CommentForm()
-    return render(request, 'blog/post_detail.html', {
-        'post': post,
-        'comment_form': comment_form,
-    })
+class PostUpdateView(FormValidMessageMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    form_valid_message = 'Edited a post.'
+
+edit = login_required(PostUpdateView.as_view())
 
 
-def delete(request, id):
-    post = get_object_or_404(Post, id=id)
-    if request.method == 'POST':
-        post.delete()
-        messages.error(request, 'Deleted a post.')
-        return redirect('blog:index')
-    return render(request, 'blog/post_delete_confirm.html', {
-        'post': post,
-    })
+class PostDeleteView(FormValidMessageMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('blog:index')
+    form_valid_message = 'Deleted a post.'
+
+delete = PostDeleteView.as_view()
 
 
-def comment_new(request, id):
-    post = get_object_or_404(Post, id=id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.save()
-            if request.is_ajax():
-                return comment
-            messages.info(request, 'Added a new comment.')
-            return redirect('blog:post_detail', id)
-    return render(request, 'blog/form.html', {
-        'form': form,
-    })
+class CommentCreateView(FormValidMessageMixin, CreateView):
+    form_class = CommentForm
+    form_valid_message = 'Added a new comment.'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, id=self.kwargs['post_id'])
+        self.object = form.save(commit=False)
+        self.object.post = post
+        self.object.save()
+
+        if self.request.is_ajax():
+            return self.object
+
+        return super(CommentCreateView, self).form_valid(form)
+
+comment_new = CommentCreateView.as_view()
 
 
-def comment_edit(request, id, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            messages.info(request, 'Edited a comment.')
-            return redirect('blog:post_detail', id)
-    else:
-        form = CommentForm(instance=comment)
-    return render(request, 'blog/form.html', {
-        'form': form,
-    })
+class CommentUpdateView(FormValidMessageMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    form_valid_message = 'Edited a new comment.'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
+comment_edit = CommentUpdateView.as_view()
 
 
-def comment_delete(request, id, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    if request.method == 'POST':
-        comment.delete()
-        return redirect('blog:post_detail', id)
+class CommentDeleteView(FormValidMessageMixin, DeleteView):
+    model = Comment
+    form_valid_message = 'Deleted a comment.'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail', args=[self.object.post.id])
+
+comment_delete = CommentDeleteView.as_view()
