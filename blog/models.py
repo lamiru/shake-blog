@@ -3,6 +3,17 @@ from django.core.urlresolvers import reverse
 from django.db import models
 
 
+class UserFollow(models.Model):
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following_set')  # noqa
+    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='follower_set')  # noqa
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (
+            ('from_user', 'to_user'),
+        )
+
+
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     title = models.CharField(max_length=100)

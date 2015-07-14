@@ -1,24 +1,47 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <table class="table table-hover table-bordered">
-        <thead>
-        <tr>
-            <th>Blogger</th>
-            <th>Registered</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in author_list %}
-        <tr>
-            <td>
-                <a href="{% url "blog:author_home" user.username %}">
-                    {{ user }}
-                </a>
-            </td>
-            <td>{{ user.date_joined }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <span>Followers</span>
+            <ul>
+                {% for follow in user.follower_set.all %}
+                    <li>
+                        <a href="{% url "blog:author_home" follow.from_user.username %}">
+                            {{ follow.from_user }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>Empty</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <span>Following</span>
+            <ul>
+                {% for follow in user.following_set.all %}
+                    <li>
+                        <a href="{% url "blog:author_home" follow.to_user.username %}">
+                            {{ follow.to_user }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>Empty</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <span>All Bloggers</span>
+            <ul>
+                {% for user in author_list %}
+                    <li>
+                        <a href="{% url "blog:author_home" user.username %}">
+                            {{ user }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

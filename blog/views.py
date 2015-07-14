@@ -1,7 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
 from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
@@ -112,3 +113,22 @@ class AuthorHomeView(ListView):
         return context
 
 author_home = AuthorHomeView.as_view()
+
+
+@login_required
+def author_follow(request, username):
+    author = get_object_or_404(get_user_model(), username=username)
+    if not author.follower_set.filter(from_user=request.user).exists():
+        messages.info(request, 'Followed.')
+        author.follower_set.create(from_user=request.user)
+    else:
+        messages.warning(request, 'Aleady followed this user.')
+    return redirect('blog:author_home', username)
+
+
+@login_required
+def author_unfollow(request, username):
+    author = get_object_or_404(get_user_model(), username=username)
+    author.follower_set.filter(from_user=request.user).delete()
+    messages.info(request, 'Unfollowed.')
+    return redirect('blog:author_home', username)

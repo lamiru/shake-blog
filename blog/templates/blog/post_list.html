@@ -2,7 +2,19 @@
 {% block navbar_brand %}
     <a class="navbar-brand" href="{% url "blog:author_home" author.username %}">{{ author }}'s blog</a>
 {% endblock %}
+{% block navbar %}
+    <li><a href="{% url "blog:author_follow" author.username %}">Follow</a></li>
+    <li><a href="{% url "blog:author_unfollow" author.username %}">Unfollow</a></li>
+{% endblock %}
 {% block content %}
+    <span>Followers</span>
+    <ul>
+        {% for follow in author.follower_set.all %}
+            <li>{{ follow.from_user }}</li>
+        {% empty %}
+            <li>Empty</li>
+        {% endfor %}
+    </ul>
 <table class="table table-hover table-bordered">
     {% for post in post_list %}
     <tr>

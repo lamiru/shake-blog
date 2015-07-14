@@ -16,4 +16,6 @@ urlpatterns = patterns(
     url(r'^(?P<post_id>\d+)/comments/(?P<pk>\d+)/delete/$',
         'comment_delete', name='comment_delete'),
     url('^' + username_pattern + '/$', 'author_home', name='author_home'),
+    url('^' + username_pattern + '/follow/$', 'author_follow', name='author_follow'),  # noqa
+    url('^' + username_pattern + '/unfollow/$', 'author_unfollow', name='author_unfollow'),  # noqa
 )

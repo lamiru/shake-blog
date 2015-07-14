@@ -40,6 +40,10 @@ body {
                 {% endblock %}
             </div>
             <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    {% block navbar %}
+                    {% endblock %}
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if not user.is_authenticated %}
                         <li><a href="{% url "login" %}">Login</a></li>
