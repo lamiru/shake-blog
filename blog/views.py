@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
 from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
 from blog.mixins import FormValidMessageMixin
@@ -115,17 +115,21 @@ class AuthorHomeView(ListView):
 author_home = AuthorHomeView.as_view()
 
 
-@login_required
-def follow(request, username):
-    author = get_object_or_404(get_user_model(), username=username)
-    request.user.follow(author)
-    messages.info(request, 'Followed.')
-    return redirect('blog:author_home', username)
+class AuthorFollowView(View):
+    def get(self, request, *args, **kwargs):
+        author = get_object_or_404(get_user_model(), username=kwargs['username'])  # noqa
+        request.user.follow(author)
+        messages.info(request, 'Followed.')
+        return redirect('blog:author_home', kwargs['username'])
+
+follow = login_required(AuthorFollowView.as_view())
 
 
-@login_required
-def unfollow(request, username):
-    author = get_object_or_404(get_user_model(), username=username)
-    request.user.unfollow(author)
-    messages.info(request, 'Unfollowed.')
-    return redirect('blog:author_home', username)
+class AuthorUnfollowView(View):
+    def get(self, request, *args, **kwargs):
+        author = get_object_or_404(get_user_model(), username=kwargs['username'])  # noqa
+        request.user.unfollow(author)
+        messages.info(request, 'Unfollowed.')
+        return redirect('blog:author_home', kwargs['username'])
+
+unfollow = login_required(AuthorUnfollowView.as_view())
