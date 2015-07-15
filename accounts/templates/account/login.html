@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% load bootstrap3 socialaccount %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="panel panel-default">
+                    {% if form_legend %}
+                        <div class="panel-heading">
+                            {{ form_legend }}
+                        </div>
+                    {% endif %}
+                    <div class="panel-body">
+                        {% bootstrap_form form %}
+                    </div>
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            {% if socialaccount.providers  %}
+                <div>
+                    {% for provider in socialaccount.providers %}
+                        <a title="{{provider.name}}" class="btn btn-social btn-{{ provider.id }} {% if provider.id == "google" %}btn-google-plus{% endif %} {{ provider.id }}" href="{% provider_login_url       provider.id process="login" scope=scope auth_params=auth_params %}">
+                            <span class="btn btn-info">Login with {{ provider.name }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% include "socialaccount/snippets/login_extra.html" %}
+            {% else %}
+                <p>Loading...</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {{ block.super }}
+{% endblock %}

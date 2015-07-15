@@ -7,7 +7,6 @@ from django.views.generic import CreateView
 
 class SignupView(CreateView):
     form_class = UserCreationForm
-    template_name = 'account/signup.html'
     success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):

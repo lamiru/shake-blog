@@ -37,11 +37,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'accounts',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.instagram',
+    # 'allauth.socialaccount.providers.twitter',
     'bootstrap3',
     'debug_toolbar',
-    'account',
     'blog',
 )
+
+SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,20 +67,29 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'shake.urls'
 
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django.template.context_processors.debug',
+    'django.template.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+            'context_processors': TEMPLATE_CONTEXT_PROCESSORS,
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'shake.wsgi.application'
@@ -135,6 +154,17 @@ from django.core.urlresolvers import reverse_lazy
 LOGIN_URL = reverse_lazy('login')  # default: /accounts/login/
 LOGIN_REDIRECT_URL = reverse_lazy('blog:index')  # default: /accounts/profile/
 
+# allauth
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'SCOPE': ['email'],
+        'METHOD': 'oauth2',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.3',
+    },
+}
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_UNIQUE_EMAIL = False
 
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = BROKER_URL
