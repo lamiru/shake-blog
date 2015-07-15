@@ -30,7 +30,14 @@
                 <div>
                     {% for provider in socialaccount.providers %}
                         <a title="{{provider.name}}" class="btn btn-social btn-{{ provider.id }} {% if provider.id == "google" %}btn-google-plus{% endif %} {{ provider.id }}" href="{% provider_login_url       provider.id process="login" scope=scope auth_params=auth_params %}">
-                            <span class="btn btn-info">Login with {{ provider.name }}</span>
+                            <span class="btn btn-info">
+                                {% if provider.id == "facebook" %}
+                                    <i class="fa fa-2x fa-facebook-square"></i>
+                                {% else %}
+                                    <i class="fa fa-2x fa-{{ provider.id }}"></i>
+                                {% endif %}
+                                Login with {{ provider.name }}
+                            </span>
                         </a>
                     {% endfor %}
                 </div>
