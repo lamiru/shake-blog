@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from blog.signals import app_ready
 
 
@@ -41,10 +42,10 @@ class UserFollow(models.Model):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    lnglat = models.CharField(max_length=50, default='')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('author'))  # noqa
+    title = models.CharField(max_length=100, verbose_name=_('title'))
+    content = models.TextField(verbose_name=_('content'))
+    lnglat = models.CharField(max_length=50, default='', verbose_name=_('lnglat'))  # noqa
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -70,7 +71,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post)
-    message = models.TextField()
+    message = models.TextField(verbose_name=_('message'))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
