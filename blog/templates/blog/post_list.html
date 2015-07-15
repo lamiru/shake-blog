@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
+{% load blog_tags %}
 {% block navbar_brand %}
     <a class="navbar-brand" href="{% url "blog:author_home" author.username %}">{{ author }}'s blog</a>
 {% endblock %}
 {% block navbar %}
-    {% if not is_following %}
+    {% if not user|is_following:author %}
         <li><a href="{% url "blog:author_follow" author.username %}">Follow</a></li>
     {% else %}
         <li><a href="{% url "blog:author_unfollow" author.username %}">Unfollow</a></li>

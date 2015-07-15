@@ -110,10 +110,6 @@ class AuthorHomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super(AuthorHomeView, self).get_context_data(**kwargs)
         context['author'] = self.author
-        if self.request.user.is_authenticated():
-            context['is_following'] = self.request.user.following_set.filter(to_user=self.author).exists()  # noqa
-        else:
-            context['is_following'] = False
         return context
 
 author_home = AuthorHomeView.as_view()
