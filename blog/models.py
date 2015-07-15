@@ -3,6 +3,21 @@ from django.core.urlresolvers import reverse
 from django.db import models
 
 
+def author_is_follow(from_user, to_user):
+    if from_user.is_authenticated() and to_user.is_authenticated():
+        return from_user.following_set.filter(to_user=to_user).exists()
+    return False
+
+
+def author_follow(from_user, to_user):
+    if not author_is_follow(from_user, to_user):
+        from_user.following_set.create(to_user=to_user)
+
+
+def author_unfollow(from_user, to_user):
+    from_user.following_set.filter(to_user=to_user).delete()
+
+
 class UserFollow(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following_set')  # noqa
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='follower_set')  # noqa
