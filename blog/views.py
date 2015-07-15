@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView   # noqa
-from blog.models import Post, Comment, author_follow, author_unfollow
+from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
 from blog.mixins import FormValidMessageMixin
 
@@ -118,7 +118,7 @@ author_home = AuthorHomeView.as_view()
 @login_required
 def follow(request, username):
     author = get_object_or_404(get_user_model(), username=username)
-    author_follow(request.user, author)
+    request.user.follow(author)
     messages.info(request, 'Followed.')
     return redirect('blog:author_home', username)
 
@@ -126,6 +126,6 @@ def follow(request, username):
 @login_required
 def unfollow(request, username):
     author = get_object_or_404(get_user_model(), username=username)
-    author_unfollow(request.user, author)
+    request.user.unfollow(author)
     messages.info(request, 'Unfollowed.')
     return redirect('blog:author_home', username)
