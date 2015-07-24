@@ -6,7 +6,7 @@ from blog.widgets import PointWidget
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'content', 'lnglat', )
+        fields = ('title', 'content', 'attached_image', 'lnglat', )
         widgets = {
             'lnglat': PointWidget,
         }

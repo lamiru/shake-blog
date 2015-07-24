@@ -56,6 +56,7 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('author'))  # noqa
     title = models.CharField(max_length=100, verbose_name=_('title'))
     content = models.TextField(verbose_name=_('content'))
+    attached_image = models.ImageField(blank=True, default='', verbose_name=_('attached_image'))  # noqa
     lnglat = models.CharField(max_length=50, default='', verbose_name=_('lnglat'))  # noqa
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

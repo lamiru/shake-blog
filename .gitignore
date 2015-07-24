@@ -1,6 +1,7 @@
 *.sqlite3
 *.pyc
 */migrations/
+/media/
 
 # Windows image file caches
 Thumbs.db

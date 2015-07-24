@@ -3,6 +3,12 @@
 
 {% block extra_script %}
 <style>
+    .post_attached_image {
+        text-align: center;
+    }
+    .post_attached_image img {
+        max-width: 100%;
+    }
     .post_thumbnail_map {
         float: left;
         margin-right: 10px;
@@ -64,6 +70,11 @@
             {{ post.title }}
         </div>
         <div class="panel-body">
+            <p class="post_attached_image">
+                {% if post.attached_image %}
+                    <img src="{{ post.attached_image.url }}" />
+                {% endif %}
+            </p>
             {% if post.lnglat %}
                 <img class="post_thumbnail_map" src="http://maps.googleapis.com/maps/api/staticmap?center={{ post.lat }},{{ post.lng }}&zoom=11&size=150x150&markers=color:red%7Clabel:A%7C{{ post.lat }},{{ post.lng }}" />
             {% endif %}
