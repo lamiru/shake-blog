@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 from blog.signals import app_ready
+from blog.utils import random_name_upload_to
 
 
 def on_app_ready(sender, **kwargs):
@@ -56,7 +57,12 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('author'))  # noqa
     title = models.CharField(max_length=100, verbose_name=_('title'))
     content = models.TextField(verbose_name=_('content'))
-    attached_image = models.ImageField(blank=True, default='', verbose_name=_('attached_image'))  # noqa
+    attached_image = models.ImageField(
+        upload_to=random_name_upload_to,
+        blank=True,
+        default='',
+        verbose_name=_('attached_image')
+    )
     lnglat = models.CharField(max_length=50, default='', verbose_name=_('lnglat'))  # noqa
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
