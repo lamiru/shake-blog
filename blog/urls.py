@@ -10,6 +10,8 @@ urlpatterns = patterns(
     url(r'^new/$', 'new', name='post_new'),
     url(r'^(?P<pk>\d+)/edit/$', 'edit', name='post_edit'),
     url(r'^(?P<pk>\d+)/delete/$', 'delete', name='post_delete'),
+    url(r'^(?P<pk>\d+)/like/$', 'post_like', name='post_like'),
+    url(r'^(?P<pk>\d+)/unlike/$', 'post_unlike', name='post_unlike'),
     url(r'^(?P<post_id>\d+)/comments/new/$', 'comment_new', name='comment_new'),  # noqa
     url(r'^(?P<post_id>\d+)/comments/(?P<pk>\d+)/edit/$', 'comment_edit',
         name='comment_edit'),

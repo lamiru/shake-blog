@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load bootstrap3 %}
+{% load bootstrap3 blog_tags %}
 
 {% block extra_script %}
 <style>
@@ -81,7 +81,21 @@
             {{ post.content|linebreaks }}
         </div>
         <div class="panel-footer">
-            Updated at : {{ post.updated_at }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>{{ post.liked_users.all.count }} people liked.</span>
+                    {% if user.is_authenticated %}
+                        {% if post|is_liked_post:user %}
+                            <a href="{% url "blog:post_unlike" post.id %}">Unlike</a>
+                        {% else %}
+                            <a href="{% url "blog:post_like" post.id %}">Like</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="col-sm-6 text-right">
+                    <span>by {{ post.author }}, Updated at : {{ post.updated_at }}</span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="panel panel-default">

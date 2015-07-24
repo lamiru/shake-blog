@@ -64,6 +64,7 @@ class Post(models.Model):
         verbose_name=_('attached_image')
     )
     lnglat = models.CharField(max_length=50, default='', verbose_name=_('lnglat'))  # noqa
+    liked_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_post_set')  # noqa
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -87,6 +88,19 @@ class Post(models.Model):
     def lat(self):
         if self.lnglat:
             return self.lnglat.split(',')[1]
+
+    def is_liked(self, user):
+        if user.id is None:
+            return False
+        return self.liked_users.filter(id=user.id).exists()
+
+    def like(self, user):
+        if user.id is not None:
+            self.liked_users.add(user)
+
+    def unlike(self, user):
+        if user.id is not None:
+            self.liked_users.remove(user)
 
 
 class Comment(models.Model):

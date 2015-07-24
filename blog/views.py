@@ -57,6 +57,24 @@ class PostDeleteView(FormValidMessageMixin, DeleteView):
 delete = PostDeleteView.as_view()
 
 
+class PostLikeView(View):
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs['pk'])
+        post.like(request.user)
+        return redirect(request.META['HTTP_REFERER'])
+
+post_like = login_required(PostLikeView.as_view())
+
+
+class PostUnlikeView(View):
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs['pk'])
+        post.unlike(request.user)
+        return redirect(request.META['HTTP_REFERER'])
+
+post_unlike = login_required(PostUnlikeView.as_view())
+
+
 class CommentCreateView(FormValidMessageMixin, CreateView):
     form_class = CommentForm
     form_valid_message = 'Added a new comment.'
