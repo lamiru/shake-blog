@@ -1,6 +1,7 @@
 from django import forms
 from blog.models import Post, Comment
 from blog.widgets import PointWidget
+from blog.utils import square_image
 
 
 class PostForm(forms.ModelForm):
@@ -14,6 +15,12 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.author = kwargs.pop('author', None)
         super(PostForm, self).__init__(*args, **kwargs)
+
+    def clean_attached_image(self):
+        attached_image = self.cleaned_data['attached_image']
+        if attached_image:
+            attached_image.file = square_image(attached_image.file, 400)
+        return attached_image
 
     def save(self, commit=True):
         post = super(PostForm, self).save(commit=False)
