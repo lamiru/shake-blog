@@ -24,7 +24,7 @@ class PointWidget(forms.HiddenInput):
 
         if value:
             try:
-                lng, lat = re.findall(r'[\d\.]+', value)
+                lng, lat = re.findall(r'[-\d\.]+', value)
                 self.attrs['base_lat'] = lat
                 self.attrs['base_lng'] = lng
             except (IndexError, ValueError):
