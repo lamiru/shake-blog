@@ -1,58 +1,9 @@
 {% extends "layout.html" %}
-{% load bootstrap3 blog_tags %}
+{% load bootstrap3 blog_tags staticfiles %}
 
 {% block extra_script %}
-<style>
-    .post_attached_image {
-        text-align: center;
-    }
-    .post_attached_image img {
-        max-width: 100%;
-    }
-    .post_thumbnail_map {
-        float: left;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-</style>
-<script>
-    $(function() {
-        var datetime_format = django.get_format('DATETIME_FORMAT');
-
-        $("#comment_form").ajaxForm(function(comment) {
-            var updated_at = new Date(comment.updated_at).format(datetime_format);
-            $("#comment_form")[0].reset();
-            $("#comment_list tbody").prepend($('<tr><td><pre>' + comment.message + '</pre><span>' + updated_at + '</span></td></tr>'));
-            $.toaster({
-                priority: 'info',
-                message: 'Added a new comment.'
-            });
-        })
-        $(".comment-delete-confirm").click(function() {
-            var url = $(this).attr("href");
-            var target = $(this).parent().parent();
-
-            if ( confirm("Are you sure to delete the comment?") ) {
-                $.ajax({
-                    url: url,
-                    method: "POST",
-                }).done(function() {
-                    target.remove();
-                    $.toaster({
-                        priority: 'danger',
-                        message: 'Deleted a comment.'
-                    });
-                }).fail(function() {
-                    $.toaster({
-                        priority: 'danger',
-                        message: 'Failed'
-                    });
-                });
-            }
-            return false;
-        });
-    });
-</script>
+<link rel="stylesheet" href="{% static "blog/post_detail.css" %}" />
+<script src="{% static "blog/post_detail.js" %}"></script>
 {% endblock %}
 
 {% block navbar_brand %}

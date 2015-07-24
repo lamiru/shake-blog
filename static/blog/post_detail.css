@@ -1,0 +1,11 @@
+.post_attached_image {
+    text-align: center;
+}
+.post_attached_image img {
+    max-width: 100%;
+}
+.post_thumbnail_map {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
