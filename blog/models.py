@@ -10,17 +10,21 @@ from blog.signals import app_ready
 
 def on_app_ready(sender, **kwargs):
     def is_follow(self, to_user):
-        if self.is_authenticated() and to_user.is_authenticated():
+        if (self.id is not None) and (to_user.id is not None):
             return self.following_set.filter(to_user=to_user).exists()
         return False
     setattr(get_user_model(), 'is_follow', is_follow)
 
     def follow(self, to_user):
+        if self.id is None:
+            raise ValueError('Save {} model instance to DB first.'.format(self))  # noqa
         if not self.is_follow(to_user):
             self.following_set.create(to_user=to_user)
     setattr(get_user_model(), 'follow', follow)
 
     def unfollow(self, to_user):
+        if self.id is None:
+            raise ValueError('Save {} model instance to DB first.'.format(self))  # noqa
         self.following_set.filter(to_user=to_user).delete()
     setattr(get_user_model(), 'unfollow', unfollow)
 
