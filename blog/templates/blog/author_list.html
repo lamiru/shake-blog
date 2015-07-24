@@ -19,6 +19,7 @@
         </div>
         <div class="col-sm-4">
             <span>Following</span>
+            <p><small>{{ user.following_summary }}</small></p>
             <ul>
                 {% for follow in user.following_set.all %}
                     <li>
